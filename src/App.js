@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import {Header} from './components/Header'
+import { Footer } from './components/Footer';
 function App() {
   return (
     <div className="App">
@@ -27,12 +28,14 @@ function App() {
 
 
 
-      <footer>
+      {/*<footer>
         <div className="container-fluid">
           <p>Footer</p>
         </div>
-      </footer>
-    </div>
+</footer>*/}
+    <Footer year="2022"/>
+</div>
+
   );
 }
 
