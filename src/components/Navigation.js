@@ -1,4 +1,5 @@
-import { useState,useEffect } from "react"
+import { useState, useEffect } from "react"
+
 export function Navigation(props){
     const [ navItems, setNavItems] = useState([])
 
@@ -8,11 +9,11 @@ export function Navigation(props){
         }
     } ,[props.items]    )
 
-    if( navItems.length >0){
-        //Navlinks collection, return a html comde for each item in the array
-        const NavLinks = navItems.map( (item)=> {
+    if( navItems.length > 0){
+        //Navlinks collection, return a html code for each item in the array
+        const NavLinks = navItems.map( ( item ) => {
             return (
-                <a herf = {item.path} className = "nav-link">{item.name}</a>
+                <a herf = {item.path} className = "nav-link">{ item.name }</a>
             )
         })
         return (
@@ -24,7 +25,7 @@ export function Navigation(props){
         )
 
     }else{
-        return null;
+        return null
     }
 
     
