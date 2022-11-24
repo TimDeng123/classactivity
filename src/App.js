@@ -11,6 +11,7 @@ import { About } from './pages/About'
 import { Signup } from './pages/Signup'
 import { Signout } from './pages/Singout'
 import { Signin} from './pages/Signin'
+import { Detail } from './pages/Detail';
 //import firebase
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from './config/FirebaseConfig';
@@ -149,6 +150,8 @@ const getDataCollection = async (path)=>{
         <Route path="/signup" element={<Signup handler={signup} />} />
         <Route path="/signout" element={<Signout handler={signoutUser} auth={auth} />} />
         <Route path="/signin" element={<Signin handler = {signin}/>}/>
+        <Route path="/book/:BooksId" element={<Detail />} />
+
       </Routes>
 
 
