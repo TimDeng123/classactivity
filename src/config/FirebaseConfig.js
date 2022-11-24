@@ -5,5 +5,6 @@ export const firebaseConfig = {
     storageBucket: "bookreview-4eab2.appspot.com",
     messagingSenderId: "1053321229157",
     appId: "1:1053321229157:web:9e6a81f851c031b354678c"
+    
   };
   

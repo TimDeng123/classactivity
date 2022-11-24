@@ -15,6 +15,7 @@ import { Signin} from './pages/Signin'
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from './config/FirebaseConfig';
 import { getFirestore,collection, getDocs } from "firebase/firestore";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 //import firebase auth
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut,signInWithEmailAndPassword } from "firebase/auth";
@@ -26,7 +27,9 @@ const FBapp = initializeApp(firebaseConfig)
 //initialise Firebase auth
 const FBauth = getAuth(FBapp)
 //initialise Firebase database
-const FBdb = getFirestore(FBapp);
+const FBdb = getFirestore(FBapp)
+//intialise Firebase storage
+const FBstorage = getStorage()
 
 
 //function to create user account
@@ -116,8 +119,20 @@ const getDataCollection = async (path)=>{
       item.id = doc.id
       dbItems.push(item)
     })
-    return dbItems
-}
+    setData(dbItems)
+  }
+    const getImageURL = (path)=>{
+        //create a regerence to image in the path
+        const ImageRef = ref(FBstorage,path)
+        return new Promise((resolve, reject)=>{
+          getDownloadURL (ImageRef)
+          .then((url) => resolve(url) )
+          .catch((error) => reject(error))
+        })
+
+    }
+    
+
 
 
 
@@ -128,7 +143,7 @@ const getDataCollection = async (path)=>{
       <Header title="My app" headernav={ nav} />
 
       <Routes>
-        <Route path="/" element={<Home listData={data}/>} />
+        <Route path="/" element={<Home listData={data} imageGetter = {getImageURL}/>} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/signup" element={<Signup handler={signup} />} />

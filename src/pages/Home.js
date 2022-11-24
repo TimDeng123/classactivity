@@ -12,7 +12,10 @@ export function Home(props) {
         const itemCollection = pageData.map((item) => {
             return (
                 <div className="col-md-4">
+                 
+                    
                     <div className="card">
+                         <Image urlgetter = {props.imageGetter} imgPath={"bookcovers/" + item.Cover}/>    
                         <div className="card-body">
                             <h5 className="card-title">
                                 {item.Title}
@@ -39,4 +42,28 @@ export function Home(props) {
         return null
     }
 
+}
+
+function Image(props){
+    const [imageURL,setImageURL]= useState()
+
+    useEffect(()=>{
+        if (!imageURL){
+           props.urlgetter(props.imgPath) 
+           .then((url)=> setImageURL(url))
+           .catch((error) => console.log(error))
+        }
+        
+    })
+
+    if (imageURL){
+    return (
+            <img src={imageURL} className="Card-img-top " alt={props.title}/>
+
+        )
+
+    }else{
+        return (<div> loading....</div>)
+    }
+   
 }
