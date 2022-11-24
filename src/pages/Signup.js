@@ -1,6 +1,6 @@
 import{useState,useEffect} from 'react'
 import { Navigate } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,Link } from 'react-router-dom'
 export function Signup(props){
     const [email, setEmail]= useState('')
     const [password,setPassword]= useState('')
@@ -33,7 +33,7 @@ export function Signup(props){
             navigate('/')
         }
     },[success])
-    
+
     const submitHandler = (event)=>{
         //stop the form from refresh the page
         event.preventDefault()
@@ -106,6 +106,10 @@ export function Signup(props){
                         </div>
     
                     </form>
+                </div>
+                <div className= "row">
+                    <div className="col text-center">
+                        <Link className = "btn btn-link" to = "/signin">Already have a account</Link> </div>
                 </div>
             </div>
     
