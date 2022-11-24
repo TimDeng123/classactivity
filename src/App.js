@@ -14,6 +14,8 @@ import { Signin} from './pages/Signin'
 //import firebase
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from './config/FirebaseConfig';
+import { getFirestore,collection, getDocs } from "firebase/firestore";
+
 //import firebase auth
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut,signInWithEmailAndPassword } from "firebase/auth";
 
@@ -23,7 +25,8 @@ import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut,si
 const FBapp = initializeApp(firebaseConfig)
 //initialise Firebase auth
 const FBauth = getAuth(FBapp)
-
+//initialise Firebase database
+const FBdb = getFirestore(FBapp);
 
 
 //function to create user account
@@ -81,20 +84,43 @@ function App() {
 
   const [auth, setAuth] = useState();
   const [nav,setNav]=useState(NavData)
-  //an observer to determine user's autheniticaiotn status
+  const [data,setData]= useState([])
+
+  useEffect(()=>{
+    if(data.length==0){
+      setData( getDataCollection('Books'))
+    }
+  },[data] )
+
+
+    //an observer to determine user's autheniticaiotn status
   onAuthStateChanged(FBauth, (user) => {
     if (user) {
       //visitor exist
-      console.log(user)
+      //console.log(user)
       setAuth(user)
       setNav(NavDataAuth)
     } else {
       //if user is null
-      console.log('not signed in')
+      //console.log('not signed in')
       setAuth(null)
       setNav(NavData)
     }
   })
+
+const getDataCollection = async (path)=>{
+    const collectionData = await getDocs(collection(FBdb, path))
+    let dbItems = []
+    collectionData.forEach((doc)=>{
+      let item = doc.data()
+      item.id = doc.id
+      dbItems.push(item)
+    })
+    return dbItems
+}
+
+
+
   return (
 
     <div className="App">
@@ -102,7 +128,7 @@ function App() {
       <Header title="My app" headernav={ nav} />
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home listData={data}/>} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/signup" element={<Signup handler={signup} />} />
