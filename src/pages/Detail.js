@@ -1,9 +1,32 @@
 import { useParams } from "react-router-dom"
+import { useState, useEffect } from "react"
+
 export function Detail (props){
+    const [bookData, setBookData]= useState()
+
     let {BooksId} = useParams()
 
+    useEffect(()=>{
+        if(!bookData){
+            props.getter("Books",BooksId)
+            .then((data)=>{
+                setBookData(data)
+               
+            })
+        }
+    })
+  
+    if(bookData){
+
+
+    
     return (
         <div className="Container my-4">
+            <div className="row">
+                <div className="col">
+                    <h2>{bookData.Title}</h2>
+                </div>
+            </div>
             <div className="row">
                 <div className="col">
                     <h2>{BooksId}</h2>
@@ -18,4 +41,11 @@ export function Detail (props){
             </div>
         </div>
     )
+}else{
+    return (
+        <div className="container my-4">
+
+        </div>
+    )
+}
 }

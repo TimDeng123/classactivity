@@ -15,8 +15,8 @@ import { Detail } from './pages/Detail';
 //import firebase
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from './config/FirebaseConfig';
-import { getFirestore,collection, getDocs } from "firebase/firestore";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getFirestore,collection, getDocs,doc,getDoc } from "firebase/firestore";
+import { getStorage, ref, getDownloadURL, } from "firebase/storage";
 
 //import firebase auth
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut,signInWithEmailAndPassword } from "firebase/auth";
@@ -134,7 +134,15 @@ const getDataCollection = async (path)=>{
     }
     
 
-
+    const getDocument = async (col,id)=>{
+      const docRef = doc(FBdb, col, id)
+      const docData = await getDoc(docRef)
+      if( docData.exists()){
+        return docData.data()
+      }else{
+        return null
+      }
+    }
 
 
   return (
@@ -150,7 +158,7 @@ const getDataCollection = async (path)=>{
         <Route path="/signup" element={<Signup handler={signup} />} />
         <Route path="/signout" element={<Signout handler={signoutUser} auth={auth} />} />
         <Route path="/signin" element={<Signin handler = {signin}/>}/>
-        <Route path="/book/:BooksId" element={<Detail />} />
+        <Route path="/book/:BooksId" element={<Detail getter={getDocument}/>} />
 
       </Routes>
 
