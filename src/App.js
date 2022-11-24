@@ -21,26 +21,12 @@ function App() {
     <div className="App">
      
       <Header title= "My app" headernav={NavData}/>
+
         <Routes>
           <Route path="/" element= {<Home/>} />
           <Route path="/about" element= {<About/>} />
           <Route path="/contact" element= {<Contact/>} />
         </Routes>
-
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col">
-            <h3>Column 1</h3>
-          </div>
-          <div className="col">
-            <h3>Column 2</h3>
-          </div>
-          <div className="col">
-            <h3>Column 3</h3>
-
-          </div>
-        </div>
-      </div>
 
 
 
