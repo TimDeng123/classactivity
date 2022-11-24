@@ -9,11 +9,12 @@ import { Home } from './pages/Home';
 import { Contact } from './pages/Contact';
 import { About } from './pages/About'
 import { Signup } from './pages/Signup'
+import { Signout } from './pages/Singout'
 //import firebase
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from './config/FirebaseConfig';
 //import firebase auth
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
 
 
@@ -43,11 +44,20 @@ const signup = (email, password) => {
   */}
 }
 
+const signoutUser = () => {
+  return new Promise((resolve,reject)=>{
+      signOut(FBauth)
+      .then(() => resolve(true))
+    .catch((error) => reject(error))
+  })
+
+}
 const NavData = [
   { name: "Home", path: "/", public: true },
   { name: "About", path: "/about", public: true },
   { name: "Contact", path: "/contact", public: true },
-  { name: "Sign Up", path: "/signup", public: true }
+  { name: "Sign Up", path: "/signup", public: true },
+  { name: "Sign Out", path: "/signout", public: true }
 
 ]
 function App() {
@@ -76,6 +86,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/signup" element={<Signup handler={signup} />} />
+        <Route path="/signout" element={<Signout handler={signoutUser} auth={auth} />} />
       </Routes>
 
 
