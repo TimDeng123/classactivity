@@ -9,6 +9,7 @@ export function Navigation(props){
     } ,[props.items]    )
 
     if( navItems.length >0){
+        //Navlinks collection, return a html comde for each item in the array
         const NavLinks = navItems.map( (item)=> {
             return (
                 <a herf = {item.path} className = "nav-link">{item.name}</a>
