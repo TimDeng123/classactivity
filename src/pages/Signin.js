@@ -6,8 +6,16 @@ export function Signin(props) {
     
     const [email,setEmail]= useState('')
     const [password, setPassword] = useState('')
+    const [success, setSuccess] = useState(false)
+    const  navigate = useNavigate()
 
+    useEffect(()=> {
+        if(success){
+            navigate('/')
+        }
+    })
     const submitHandler = (event)=>{
+
         //stop the form from refresh the page
         event.preventDefault()
         //reset error message
@@ -16,7 +24,7 @@ export function Signin(props) {
        //capture date from form
        const data = new FormData(event.target)
        props.handler(data.get("useremail"),data.get("userpw"))
-       .then(()=> console.log('success'))
+       .then(()=> setSuccess(true))
        .catch((error)=> {
        //console.log(error)
        //handleErrors(error.code)

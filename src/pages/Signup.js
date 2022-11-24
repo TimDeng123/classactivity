@@ -8,7 +8,9 @@ export function Signup(props){
     const [validPassword, setValidPassword]=useState(false)
     const [error, setError]= useState();
     const [success, setSuccess]=useState(false)
+    const navigate = useNavigate();
 
+    
     useEffect(()=> {
         //check the value of email
         //check if email contain @ and it's not the first character
@@ -59,7 +61,7 @@ export function Signup(props){
 
     }
 
-    const navigate = useNavigate();
+    
 
     //if( success === false){
         return (
