@@ -57,29 +57,39 @@ const NavData = [
   { name: "About", path: "/about", public: true },
   { name: "Contact", path: "/contact", public: true },
   { name: "Sign Up", path: "/signup", public: true },
-  { name: "Sign Out", path: "/signout", public: true }
+ // { name: "Sign in", path: "/signin", public: true }
 
+]
+const NavDataAuth=[
+  { name: "Home", path: "/", public: true },
+  { name: "About", path: "/about", public: true },
+  { name: "Contact", path: "/contact", public: true },
+  
+  { name: "Sign Out", path: "/signout", public: true }
 ]
 function App() {
 
   const [auth, setAuth] = useState();
+  const [nav,setNav]=useState(NavData)
   //an observer to determine user's autheniticaiotn status
   onAuthStateChanged(FBauth, (user) => {
     if (user) {
       //visitor exist
       console.log(user)
       setAuth(user)
+      setNav(NavDataAuth)
     } else {
       //if user is null
       console.log('not signed in')
       setAuth(null)
+      setNav(NavData)
     }
   })
   return (
 
     <div className="App">
 
-      <Header title="My app" headernav={NavData} />
+      <Header title="My app" headernav={ nav} />
 
       <Routes>
         <Route path="/" element={<Home />} />
