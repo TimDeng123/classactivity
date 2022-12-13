@@ -29,7 +29,7 @@ export function Home(props) {
         })
         return (
             <div className="Home">
-                <h1>Home</h1>
+                <h1>Welcome to Book Reviewer</h1>
                 <div className="container">
                     <div className="row">
                         {itemCollection}

@@ -149,7 +149,7 @@ const getDataCollection = async (path)=>{
 
     <div className="App">
 
-      <Header title="My app" headernav={ nav} />
+      <Header title="Book Viewer" headernav={ nav} />
 
       <Routes>
         <Route path="/" element={<Home listData={data} imageGetter = {getImageURL}/>} />
