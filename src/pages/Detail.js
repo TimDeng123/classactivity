@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
+import {Reviews} from "../components/Reviews"
 
 export function Detail(props) {
     const [bookData, setBookData] = useState()
@@ -11,17 +12,25 @@ export function Detail(props) {
             props.getter("Books", BooksId)
                 .then((data) => {
                     setBookData(data)
-                    //get review
-                    let reviews = props.getReviews(BooksId)
-                    setBookReviews(reviews)
-
+                   
                 })
         }
     })
 
+    useEffect(()=> {
+        if(bookReviews.length == 0){
+            props.getReviews(BooksId)
+
+        }
+    },[bookData])
+
+    useEffect(()=>{
+        setBookReviews(props.reviews)
+    },[props.reviews])
+
     const reviewSubmitHandler = (event) =>{
        event.preventDefault()
-       
+
        const data = new FormData( event.target)
        
         props.addReview(data.get("BooksId"), data.get("reviewtext"), data.get("userId"))
@@ -60,13 +69,18 @@ export function Detail(props) {
 
                             <form method = "post" onSubmit={reviewSubmitHandler}>
                                 <label className="form-lable"><h5>Write a review</h5></label>
-                                <textarea cols="5" rows="5" name="reviewtext" className="form-control" placeholder="Say something here..."></textarea>
+                                <textarea  rows="4" cols="30" name="reviewtext" className="form-control" placeholder="Say something here..."></textarea>
                                 <input type = "hidden" name = "userId" value={props.auth.uid}></input>
                                 <input type = "hidden" name = "BooksId" value = {BooksId} />
                                 <button className="btn btn-info my-2 ">review this book</button>
                             </form>
                         </div>
 
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <Reviews reviews={bookReviews}/>
                     </div>
                 </div>
             </div>
@@ -93,10 +107,11 @@ function DetailImage(props) {
 
     if (imgUrl) {
         return (
-            <img src={imgUrl} style={{ width: "100%" }} alt="book cover" />
+            <img src={imgUrl} style={{ width: "40%" }} alt="book cover" />
         )
     } else {
         return <p>loading...</p>
 
     }
 }
+

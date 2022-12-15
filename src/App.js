@@ -55,7 +55,7 @@ function App() {
   const [nav, setNav] = useState(NavData)
   const [data, setData] = useState([])
   const [userData, setUserData] = useState()
-
+  const [bookReviews, setBookreviews] = useState([])
   useEffect(() => {
     if (data.length == 0) {
       setData(getDataCollection('Books'))
@@ -171,7 +171,7 @@ function App() {
 
   const addBookReview = async (BooksId, reviewText, userId) => {
     const path = "Books/" + BooksId + "/reviews"
-    const reviewObj = { BookId: BooksId, UserId: userId, Text: reviewText }
+    const reviewObj = { BookId: BooksId, UserId: userId, Text: reviewText, Date: new Date() }
     const reviewRef = await addDoc(collection(FBdb, path), reviewObj)
     if (reviewRef.id) {
       return true
@@ -181,14 +181,16 @@ function App() {
     }
   }
   const getBookReviews = async (BooksID) => {
-    const collectionStr = "Books/" + BooksID + "/review"
+    const collectionStr = "Books/" + BooksID + "/reviews"
     const reviewQuery = query(collection(FBdb, collectionStr ))
     const unsubscirbe = onSnapshot(reviewQuery , (reviewsSnapshot) =>{
       let reviews = []
       reviewsSnapshot.forEach((review)=>{
         reviews.push(review.data())
       })
-      return reviews
+      //return reviews
+      console.log(reviews)
+      setBookreviews( reviews )
     })
 
   }
@@ -205,7 +207,7 @@ function App() {
         <Route path="/signup" element={<Signup handler={signup} />} />
         <Route path="/signout" element={<Signout handler={signoutUser} auth={auth} />} />
         <Route path="/signin" element={<Signin handler={signin} />} />
-        <Route path="/book/:BooksId" element={<Detail getter={getDocument} auth={auth} imageGetter={getImageURL} addReview={addBookReview} getReviews={getBookReviews}/>} />
+        <Route path="/book/:BooksId" element={<Detail getter={getDocument} auth={auth} imageGetter={getImageURL} addReview={addBookReview} getReviews={getBookReviews} reviews={bookReviews}/>} />
 
       </Routes>
 
