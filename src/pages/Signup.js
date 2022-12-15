@@ -6,6 +6,8 @@ export function Signup(props){
     const [password,setPassword]= useState('')
     const [validEmail, setValidEmail]=useState(false)
     const [validPassword, setValidPassword]=useState(false)
+    const [username, setUsername]= useState('')
+    const [validusername, setValidUsername]=useState(false)
     const [error, setError]= useState();
     const [success, setSuccess]=useState(false)
     const navigate = useNavigate();
@@ -21,6 +23,14 @@ export function Signup(props){
         }
     },[email])
     
+    useEffect(()=> {
+        if(username.length >=5){
+            setValidUsername(true)
+        }else{
+            setValidUsername(false)
+        }
+    },[username])
+
     useEffect(()=> {
         if(password.length >= 8 ){
             setValidPassword(true)
@@ -44,7 +54,7 @@ export function Signup(props){
       
        //capture date from form
        const data = new FormData(event.target)
-       props.handler(data.get("useremail"),data.get("userpw"))
+       props.handler(data.get("username"),data.get("useremail"),data.get("userpw"))
        .then(()=> setSuccess(true))
        .catch((error)=> {
        //console.log(error)
@@ -71,7 +81,20 @@ export function Signup(props){
                     <form className="col-md-4 offset-md-4" onSubmit={ submitHandler }>
     
                         <h2>Sign up for an account</h2>
+                        <div className="mb-3">
+                        <label htmlFor = "username">User name(minmum 5 characters)</label>
+                        <input 
+                                type= "Text" 
+                                id = "username" 
+                                placeholder = "your user name" 
+                                className="form-control"
+                                name = "username"
+                                value = {username}
+                                onChange= {(event) => setUsername(event.target.value)}
+                            />
+                        </div>
                         <div className = "mb-3">
+                            
                             <label htmlFor = "useremail">Email</label>
                             <input 
                                 type ="email" 
@@ -101,7 +124,7 @@ export function Signup(props){
                             <button 
                             type="submit" 
                             className="btn btn-primary"
-                            disabled = {(validEmail && validPassword)? false : true}
+                            disabled = {(validEmail && validPassword && validusername)? false : true}
                             >Sign up
                             </button>
                             <div>{error}</div>

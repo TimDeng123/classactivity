@@ -15,7 +15,7 @@ import { Detail } from './pages/Detail';
 //import firebase
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from './config/FirebaseConfig';
-import { getFirestore,collection, getDocs,doc,getDoc } from "firebase/firestore";
+import { getFirestore,collection, getDocs,doc,getDoc,setDoc } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL, } from "firebase/storage";
 
 //import firebase auth
@@ -33,42 +33,7 @@ const FBdb = getFirestore(FBapp)
 const FBstorage = getStorage()
 
 
-//function to create user account
-const signup = (email, password) => {
-  return new Promise((resolve, reject) => {
-    createUserWithEmailAndPassword(FBauth, email, password)
-      .then((userCredential) => resolve(userCredential.user))
-      .catch((error) => reject(error))
-  })
-  {/*createUserWithEmailAndPassword(FBauth, email, password)
-    .then((userCredential) => {
-      //do something with the credential
-      console.log(userCredential.user)
-    })
-    .catch((error) => {
-      console.log(error)
-    }
-    )
-  */}
-}
 
-const signin = (email,password)=>{
-  return new Promise((resolve,reject)=> {
-    signInWithEmailAndPassword(FBauth, email,password)
-    .then((userCredential)=> resolve(userCredential.user))
-    .catch((error) => reject(error) )
-  })
-
-}
-
-const signoutUser = () => {
-  return new Promise((resolve,reject)=>{
-      signOut(FBauth)
-      .then(() => resolve(true))
-    .catch((error) => reject(error))
-  })
-
-}
 const NavData = [
   { name: "Home", path: "/", public: true },
   { name: "About", path: "/about", public: true },
@@ -89,6 +54,7 @@ function App() {
   const [auth, setAuth] = useState();
   const [nav,setNav]=useState(NavData)
   const [data,setData]= useState([])
+  const [userData, setUserData] = useState()
 
   useEffect(()=>{
     if(data.length==0){
@@ -96,7 +62,10 @@ function App() {
     }
   },[data] )
 
+  useEffect(()=> {
+    console.log(userData)
 
+  },[userData])
     //an observer to determine user's autheniticaiotn status
   onAuthStateChanged(FBauth, (user) => {
     if (user) {
@@ -109,9 +78,62 @@ function App() {
       //console.log('not signed in')
       setAuth(null)
       setNav(NavData)
+      setUserData(null)
     }
   })
 
+  //
+  //function to create user account
+const signup = (username, email, password) => {
+  return new Promise((resolve, reject) => {
+    createUserWithEmailAndPassword(FBauth, email, password)
+      .then(async(userCredential) =>{ 
+        const uid = userCredential.user.uid
+        //write username to database
+        const userObj = {
+          name: username,
+          profileImg: "defalut.png"
+        }
+        await setDoc(doc( FBdb, "users", uid),userObj)
+        setUserData(userObj)
+        resolve(userCredential.user)})
+      .catch((error) => {reject(error)})
+  })
+  {/*createUserWithEmailAndPassword(FBauth, email, password)
+    .then((userCredential) => {
+      //do something with the credential
+      console.log(userCredential.user)
+    })
+    .catch((error) => {
+      console.log(error)
+    }
+    )
+  */}
+}
+
+const signin = (email,password)=>{
+  return new Promise((resolve,reject)=> {
+    signInWithEmailAndPassword(FBauth, email,password)
+    .then(async(userCredential)=> {
+      const uid = userCredential.user.uid
+      const docRef = doc(FBdb, "users", uid)
+      const docData = await getDoc(docRef)
+      
+      setUserData( docData.data() )
+      resolve(userCredential.user)})
+    .catch((error) => reject(error) )
+  })
+
+}
+
+const signoutUser = () => {
+  return new Promise((resolve,reject)=>{
+      signOut(FBauth)
+      .then(() => resolve(true))
+    .catch((error) => reject(error))
+  })
+
+}
 const getDataCollection = async (path)=>{
     const collectionData = await getDocs(collection(FBdb, path))
     let dbItems = []
@@ -149,7 +171,7 @@ const getDataCollection = async (path)=>{
 
     <div className="App">
 
-      <Header title="Book Viewer" headernav={ nav} />
+      <Header title="Book Viewer" headernav={ nav} user={userData}/>
 
       <Routes>
         <Route path="/" element={<Home listData={data} imageGetter = {getImageURL}/>} />
@@ -158,7 +180,7 @@ const getDataCollection = async (path)=>{
         <Route path="/signup" element={<Signup handler={signup} />} />
         <Route path="/signout" element={<Signout handler={signoutUser} auth={auth} />} />
         <Route path="/signin" element={<Signin handler = {signin}/>}/>
-        <Route path="/book/:BooksId" element={<Detail getter={getDocument}/>} />
+        <Route path="/book/:BooksId" element={<Detail getter={getDocument} auth={auth} imageGetter = {getImageURL}/>} />
 
       </Routes>
 
