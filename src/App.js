@@ -171,7 +171,7 @@ function App() {
 
   const addBookReview = async (BooksId, reviewText, userId) => {
     const path = "Books/" + BooksId + "/reviews"
-    const reviewObj = { BookId: BooksId, User: userId, Text: reviewText }
+    const reviewObj = { BookId: BooksId, UserId: userId, Text: reviewText }
     const reviewRef = await addDoc(collection(FBdb, path), reviewObj)
     if (reviewRef.id) {
       return true

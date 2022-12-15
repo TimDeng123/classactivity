@@ -14,13 +14,14 @@ export function Detail(props) {
                     //get review
                     let reviews = props.getReviews(BooksId)
                     setBookReviews(reviews)
-                        
+
                 })
         }
     })
 
     const reviewSubmitHandler = (event) =>{
        event.preventDefault()
+       
        const data = new FormData( event.target)
        
         props.addReview(data.get("BooksId"), data.get("reviewtext"), data.get("userId"))
