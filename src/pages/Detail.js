@@ -132,7 +132,7 @@ function DetailImage(props) {
 
     if (imgUrl) {
         return (
-            <img src={imgUrl} style={{ width: "40%" }} alt="book cover" />
+            <img src={imgUrl} style={{ width: "100%" }} alt="book cover" />
         )
     } else {
         return <p>loading...</p>
