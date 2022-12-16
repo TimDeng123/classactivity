@@ -186,7 +186,20 @@ function App() {
     const unsubscirbe = onSnapshot(reviewQuery , (reviewsSnapshot) =>{
       let reviews = []
       reviewsSnapshot.forEach((review)=>{
-        reviews.push(review.data())
+        let reviewData = review.data()
+        //create js date object and get 
+        let dateData = reviewData.Date.toDate()
+        let year = dateData.getFullYear()
+        let month = dateData.getMonth()+1
+        let date = dateData.getDate()
+        let hours = dateData.getHours()
+        let minutes = dateData.getMinutes()
+
+        let dateSrt = `${date}/${month}/${year}/${hours}:${minutes}`
+
+        reviewData.Date = dateSrt
+
+        reviews.push(reviewData)
       })
       //return reviews
       console.log(reviews)
@@ -194,6 +207,9 @@ function App() {
     })
 
   }
+
+
+
   return (
 
     <div className="App">
@@ -207,7 +223,16 @@ function App() {
         <Route path="/signup" element={<Signup handler={signup} />} />
         <Route path="/signout" element={<Signout handler={signoutUser} auth={auth} />} />
         <Route path="/signin" element={<Signin handler={signin} />} />
-        <Route path="/book/:BooksId" element={<Detail getter={getDocument} auth={auth} imageGetter={getImageURL} addReview={addBookReview} getReviews={getBookReviews} reviews={bookReviews}/>} />
+        <Route path="/book/:BooksId" element={<
+          Detail getter={getDocument} 
+          auth={auth} 
+          imageGetter={getImageURL} 
+          addReview={addBookReview} 
+          getReviews={getBookReviews} 
+          reviews={bookReviews}
+        
+          />
+          } />
 
       </Routes>
 

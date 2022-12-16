@@ -5,14 +5,16 @@ import {Reviews} from "../components/Reviews"
 export function Detail(props) {
     const [bookData, setBookData] = useState()
     const [bookReviews, setBookReviews] = useState([])
+    const [userHasReview, setUserHasReview] = useState(false)
+ 
     let { BooksId } = useParams()
-
+   // props.resetReviews()
     useEffect(() => {
         if (!bookData) {
             props.getter("Books", BooksId)
                 .then((data) => {
                     setBookData(data)
-                   
+                  
                 })
         }
     })
@@ -28,13 +30,29 @@ export function Detail(props) {
         setBookReviews(props.reviews)
     },[props.reviews])
 
+    useEffect (()=>{
+        if (props.auth){
+           
+           if(bookReviews.length > 0){
+            let userReview = bookReviews.filter((review)=>{
+                if (review.UserId == props.auth.uid){
+                    setUserHasReview(true)
+                    return review
+                }
+            })
+           }
+        }
+    },[bookReviews])
+
     const reviewSubmitHandler = (event) =>{
        event.preventDefault()
 
        const data = new FormData( event.target)
        
         props.addReview(data.get("BooksId"), data.get("reviewtext"), data.get("userId"))
-       // .then ((res) => console.log(res))
+        .then ((res) => console.log(res))
+
+        event.target.reset()
     }   
 
     if (bookData) {
@@ -70,9 +88,16 @@ export function Detail(props) {
                             <form method = "post" onSubmit={reviewSubmitHandler}>
                                 <label className="form-lable"><h5>Write a review</h5></label>
                                 <textarea  rows="4" cols="30" name="reviewtext" className="form-control" placeholder="Say something here..."></textarea>
-                                <input type = "hidden" name = "userId" value={props.auth.uid}></input>
+                                <input type = "hidden" name = "userId" value={(props.auth)? props.auth.uid : ""}></input>
                                 <input type = "hidden" name = "BooksId" value = {BooksId} />
-                                <button className="btn btn-info my-2 ">review this book</button>
+                                <button 
+                                className="btn btn-info my-2 "
+                                disabled = {(userHasReview)? true : false}
+                                >review this book
+                                </button>
+                                <div className = "alert alert-warning" role = "alert" style = {{display: (userHasReview)? "block" : "none"}}>
+                                    You can only have one review for each book
+                                </div>
                             </form>
                         </div>
 

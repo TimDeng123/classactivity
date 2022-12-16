@@ -13,11 +13,11 @@ export function Reviews(props){
             <p>There are no reviews for this book</p>
         </div>
     }else{
-         const ReviewsCollection = reviews.map((item)=> {
+         const ReviewsCollection = reviews.map((item, key)=> {
             return (
 
-                <div>
-                    <h4>{item.Date}</h4>
+                <div className="my-3" key={key}>
+                    <p>{item.Date}</p>
                     <p>{item.Text}</p>
                 </div>
             )
